@@ -281,17 +281,16 @@ const GLYPHS = {
 // ---------- Relationship / connector diagrams ----------
 function rel({dash, start, end, label}){
   const dashAttr = dash ? `stroke-dasharray="${dash}"` : '';
-  let startMark='', endMark='';
+  let startMark='', endMark='', labelMark='';
   const lx1=22, lx2=74, ly=48;
-  if(start==='diamond-filled') startMark = `<path d="M${lx1} ${ly} L${lx1+12} ${ly-8} L${lx1+24} ${ly} L${lx1+12} ${ly+8} Z" fill="${NAVY}"/>`;
-  if(start==='diamond-hollow') startMark = `<path d="M${lx1} ${ly} L${lx1+12} ${ly-8} L${lx1+24} ${ly} L${lx1+12} ${ly+8} Z" fill="white" stroke="${NAVY}" stroke-width="3"/>`;
-  if(start==='circle-filled') startMark = `<circle cx="${lx1+8}" cy="${ly}" r="7" fill="${NAVY}"/>`;
-  if(end==='arrow-hollow-tri') endMark = `<path d="M${lx2} ${ly} L${lx2-16} ${ly-9} L${lx2-16} ${ly+9} Z" fill="white" stroke="${NAVY}" stroke-width="3"/>`;
-  if(end==='arrow-open') endMark = `<path d="M${lx2-14} ${ly-9} L${lx2} ${ly} L${lx2-14} ${ly+9}" stroke="${NAVY}" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
-  if(end==='arrow-small-open') endMark = `<path d="M${lx2-10} ${ly-6} L${lx2} ${ly} L${lx2-10} ${ly+6}" stroke="${NAVY}" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
-  if(end==='arrow-solid') endMark = `<path d="M${lx2} ${ly} L${lx2-16} ${ly-8} L${lx2-16} ${ly+8} Z" fill="${NAVY}"/>`;
-  if(end==='diamond-small-filled') endMark = `<path d="M${lx2} ${ly} L${lx2-10} ${ly-7} L${lx2-20} ${ly} L${lx2-10} ${ly+7} Z" fill="${NAVY}"/>`;
-  return g(`<rect x="10" y="40" width="16" height="16" rx="2" stroke="${NAVY}" stroke-width="3"/><rect x="70" y="40" width="16" height="16" rx="2" stroke="${NAVY}" stroke-width="3"/><line x1="${lx1}" y1="${ly}" x2="${lx2}" y2="${ly}" stroke="${NAVY}" stroke-width="3" ${dashAttr}/>${startMark}${endMark}`);
+  if(start==='diamond-filled') startMark = `<path d="M${lx1} ${ly} L${lx1+13} ${ly-9} L${lx1+26} ${ly} L${lx1+13} ${ly+9} Z" fill="${NAVY}"/>`;
+  if(start==='diamond-hollow') startMark = `<path d="M${lx1} ${ly} L${lx1+13} ${ly-9} L${lx1+26} ${ly} L${lx1+13} ${ly+9} Z" fill="white" stroke="${NAVY}" stroke-width="3.5"/>`;
+  if(start==='circle-filled') startMark = `<circle cx="${lx1+8}" cy="${ly}" r="7.5" fill="${NAVY}"/>`;
+  if(end==='arrow-hollow-tri') endMark = `<path d="M${lx2} ${ly} L${lx2-18} ${ly-10} L${lx2-18} ${ly+10} Z" fill="white" stroke="${NAVY}" stroke-width="3.5"/>`;
+  if(end==='arrow-open') endMark = `<path d="M${lx2-16} ${ly-10} L${lx2} ${ly} L${lx2-16} ${ly+10}" stroke="${NAVY}" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+  if(end==='arrow-solid') endMark = `<path d="M${lx2} ${ly} L${lx2-18} ${ly-9} L${lx2-18} ${ly+9} Z" fill="${NAVY}"/>`;
+  if(label) labelMark = `<text x="48" y="${ly-14}" text-anchor="middle" font-size="14" font-weight="700" fill="${NAVY}" font-family="monospace">${label}</text>`;
+  return g(`<rect x="8" y="39" width="18" height="18" rx="2" stroke="${NAVY}" stroke-width="3"/><rect x="70" y="39" width="18" height="18" rx="2" stroke="${NAVY}" stroke-width="3"/><line x1="${lx1+ (start?4:0)}" y1="${ly}" x2="${lx2}" y2="${ly}" stroke="${NAVY}" stroke-width="3.5" ${dashAttr}/>${startMark}${endMark}${labelMark}`);
 }
 function junction(filled){
   return g(`<line x1="48" y1="10" x2="48" y2="42" stroke="${NAVY}" stroke-width="3"/><line x1="14" y1="80" x2="42" y2="52" stroke="${NAVY}" stroke-width="3"/><line x1="82" y1="80" x2="54" y2="52" stroke="${NAVY}" stroke-width="3"/><circle cx="48" cy="47" r="10" fill="${filled?NAVY:'white'}" stroke="${NAVY}" stroke-width="3"/>`);
@@ -378,16 +377,16 @@ const DATA = [
 {id:'relaciones', title:'Relaciones Estructurales y de Dependencia', color:'var(--relacion)', items:[
   {n:'Composición', rel:{start:'diamond-filled'}, def:'El elemento consiste de uno o más elementos que forman parte de un todo y no pueden funcionar de forma independiente.', ej:'El sistema de cuentas del BNCR está compuesto por módulos de apertura, consulta y cierre que dependen del sistema principal.'},
   {n:'Agregación', rel:{start:'diamond-hollow'}, def:'El elemento combina uno o más conceptos que sí pueden funcionar de forma independiente.', ej:'La cartera de productos del BNCR combina cuentas corrientes, de ahorro y tarjetas de crédito, que funcionan por separado.'},
-  {n:'Asignación', rel:{start:'circle-filled'}, def:'Expresa la asignación de responsabilidad, ejecución de un comportamiento, almacenamiento o procesamiento a un elemento.', ej:'Un asesor de crédito del BNCR está asignado al proceso de aprobación de préstamos.'},
+  {n:'Asignación', rel:{start:'circle-filled', end:'arrow-solid'}, def:'Expresa la asignación de responsabilidad, ejecución de un comportamiento, almacenamiento o procesamiento a un elemento.', ej:'Un asesor de crédito del BNCR está asignado al proceso de aprobación de préstamos.'},
   {n:'Realización', rel:{dash:'2 6', end:'arrow-hollow-tri'}, def:'Una entidad juega un rol clave en la creación, logro, soporte u operación de una entidad más abstracta.', ej:'La aplicación BN Móvil realiza el servicio de consulta de saldos para los clientes.'},
   {n:'Servicio (Serving)', rel:{end:'arrow-open'}, def:'Un elemento provee su funcionalidad a otro elemento.', ej:'El servicio de validación de firma digital del BNCR provee funcionalidad al sistema de aprobación de créditos.'},
-  {n:'Acceso', rel:{dash:'1 5', end:'arrow-small-open'}, def:'Habilidad de elementos activos y de comportamiento de observar o actuar sobre elementos pasivos de estructura.', ej:'La app BN Móvil accede a los datos de cuentas de los clientes para mostrar saldos y movimientos.'},
-  {n:'Influencia', rel:{dash:'6 4', end:'arrow-small-open'}, def:'Un elemento afecta la implementación o logro de algún elemento de motivación.', ej:'Una política interna del BNCR influye en la estrategia de transformación digital.'},
+  {n:'Acceso', rel:{dash:'2 6', end:'arrow-open'}, def:'Habilidad de elementos activos y de comportamiento de observar o actuar sobre elementos pasivos de estructura.', ej:'La app BN Móvil accede a los datos de cuentas de los clientes para mostrar saldos y movimientos.'},
+  {n:'Influencia', rel:{dash:'8 4', end:'arrow-open', label:'+/-'}, def:'Un elemento afecta la implementación o logro de algún elemento de motivación.', ej:'Una política interna del BNCR influye en la estrategia de transformación digital.'},
   {n:'Asociación', rel:{}, def:'Relación no especificada, o una que no está representada por otra relación de ArchiMate.', ej:'Un cliente está asociado a múltiples productos como cuentas y préstamos.'},
 ]},
 {id:'comportamiento', title:'Relaciones de Comportamiento y Especialización', color:'var(--relacion)', items:[
   {n:'Desencadenante (Triggering)', rel:{end:'arrow-solid'}, def:'Relación temporal o causal entre elementos.', ej:'La recepción de una solicitud de préstamo desencadena la evaluación crediticia.'},
-  {n:'Flujo', rel:{dash:'2 6', end:'diamond-small-filled'}, def:'Transferencia (de información, bienes o dinero) de un elemento a otro.', ej:'Los datos de una solicitud ingresada en ventanilla fluyen hacia el sistema central para su procesamiento.'},
+  {n:'Flujo', rel:{dash:'2 6', end:'arrow-solid'}, def:'Transferencia (de información, bienes o dinero) de un elemento a otro.', ej:'Los datos de una solicitud ingresada en ventanilla fluyen hacia el sistema central para su procesamiento.'},
   {n:'Especialización', rel:{end:'arrow-hollow-tri'}, def:'Un elemento es una clase particular de otro elemento.', ej:'La cuenta electrónica del BNCR es una especialización de la cuenta de ahorro tradicional.'},
 ]},
 {id:'conectores', title:'Conectores', color:'var(--relacion)', items:[
