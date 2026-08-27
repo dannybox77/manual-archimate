@@ -333,7 +333,7 @@
   <div class="jumpwrap">
     <button class="jumpbtn" onclick="toggleJump('jumpSimbolos')">☰ Ir a símbolo</button>
     <div class="jumppanel" id="jumpSimbolos">
-      <input type="text" placeholder="Buscar símbolo…" oninput="filterJumpPanel(this, 'jumpSimbolos')" autocomplete="off">
+      <input type="text" placeholder="Buscar capa…" oninput="filterJumpPanel(this, 'jumpSimbolos')" autocomplete="off">
       <div class="jumplist" id="jumpSimbolosList"></div>
     </div>
   </div>
@@ -982,13 +982,7 @@ const VP_LIST = [
 ];
 
 function buildSymbolList(){
-  const items = [];
-  DATA.forEach(cat => {
-    cat.items.forEach(item => {
-      items.push({title: item.n, id: 'sym-' + slugify(item.n), cat: cat.title});
-    });
-  });
-  return items;
+  return DATA.map(cat => ({title: cat.title, id: 'cat-' + cat.id}));
 }
 const SYM_LIST = buildSymbolList();
 
@@ -1020,7 +1014,7 @@ function toggleJump(panelId){
   document.querySelectorAll('.jumppanel').forEach(p => p.classList.remove('open'));
   if(!isOpen){
     panel.classList.add('open');
-    if(panelId === 'jumpSimbolos') renderJumpList('jumpSimbolosList', SYM_LIST, true);
+    if(panelId === 'jumpSimbolos') renderJumpList('jumpSimbolosList', SYM_LIST, false);
     if(panelId === 'jumpViewpoints') renderJumpList('jumpViewpointsList', VP_LIST, false);
     const input = panel.querySelector('input');
     input.value = '';
