@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual de Convenciones ArchiMate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B1622;
+    --bg2:#0E1B29;
+    --grid:rgba(140,180,210,0.06);
+    --panel:#122333;
+    --panel2:#0F1E2C;
+    --border:#223347;
+    --text:#E7ECF2;
+    --text-dim:#8FA3B8;
+    --accent:#4FD1E8;
+
+    --motivacion:#C6B6E8;
+    --estrategia:#F0B978;
+    --negocio:#F3E27A;
+    --aplicacion:#7FE0DE;
+    --tecnologia:#8FD79A;
+    --fisica:#4F9E63;
+    --implementacion:#F0A2A6;
+    --compuesto:#F2C79C;
+    --relacion:#9FB8D9;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/40px 40px,
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/40px 40px,
+      var(--bg);
+    color:var(--text);
+    font-family:'IBM Plex Sans', sans-serif;
+    min-height:100vh;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    font-size:11px;
+    color:var(--accent);
+  }
+  header{
+    padding:56px 6vw 28px;
+    border-bottom:1px solid var(--border);
+    background:linear-gradient(180deg, rgba(79,209,232,0.05), transparent);
+  }
+  header h1{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:clamp(28px,4vw,46px);
+    margin:10px 0 8px;
+    font-weight:700;
+    letter-spacing:-0.01em;
+  }
+  header p{
+    color:var(--text-dim);
+    max-width:640px;
+    line-height:1.55;
+    font-size:15px;
+    margin:0;
+  }
+
+  .stack{
+    display:flex;
+    gap:0;
+    margin-top:30px;
+    flex-wrap:wrap;
+    border:1px solid var(--border);
+    border-radius:10px;
+    overflow:hidden;
+  }
+  .stack button{
+    flex:1 1 auto;
+    min-width:110px;
+    border:none;
+    border-right:1px solid var(--border);
+    padding:12px 10px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:.03em;
+    cursor:pointer;
+    color:#0B1622;
+    font-weight:600;
+    transition:filter .15s ease, transform .15s ease;
+    position:relative;
+  }
+  .stack button:last-child{border-right:none;}
+  .stack button:hover{filter:brightness(1.12);}
+  .stack button.active{outline:2px solid var(--text); outline-offset:-4px;}
+  .stack button:focus-visible{outline:3px solid var(--accent);}
+
+  .toolbar{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    padding:18px 6vw;
+    position:sticky;
+    top:0;
+    background:rgba(11,22,34,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--border);
+    z-index:10;
+  }
+  #search{
+    flex:1;
+    max-width:420px;
+    background:var(--panel2);
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:10px 14px;
+    border-radius:8px;
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:14px;
+  }
+  #search:focus{outline:2px solid var(--accent); border-color:var(--accent);}
+  #count{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--text-dim);
+  }
+
+  main{padding:8px 6vw 80px;}
+  .category{margin-top:46px;}
+  .category h2{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:22px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:4px;
+  }
+  .swatch{width:14px;height:14px;border-radius:3px;display:inline-block;}
+  .category .sub{color:var(--text-dim); font-size:13px; margin:0 0 18px;}
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(270px,1fr));
+    gap:16px;
+  }
+  .card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:16px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .card-head{
+    display:flex;
+    gap:12px;
+    align-items:center;
+  }
+  .badge{
+    width:64px;height:64px;
+    border-radius:10px;
+    flex:none;
+    display:flex;align-items:center;justify-content:center;
+    border:1px solid rgba(0,0,0,0.25);
+  }
+  .badge svg{width:42px;height:42px;}
+  .card-head h3{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:16px;
+    margin:0;
+    font-weight:600;
+    line-height:1.25;
+  }
+  .card p{margin:0; font-size:13.5px; line-height:1.5; color:var(--text-dim);}
+  .example{
+    background:var(--panel2);
+    border-left:3px solid var(--accent);
+    padding:9px 12px;
+    border-radius:0 8px 8px 0;
+    font-size:13px;
+    line-height:1.5;
+  }
+  .example b{
+    display:block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin-bottom:3px;
+  }
+  .hidden{display:none !important;}
+  .empty{
+    color:var(--text-dim);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    padding:40px 0;
+    text-align:center;
+  }
+
+  footer{
+    border-top:1px solid var(--border);
+    padding:24px 6vw 40px;
+    color:var(--text-dim);
+    font-size:12px;
+    font-family:'IBM Plex Mono', monospace;
+  }
+
+  ::selection{background:var(--accent); color:#0B1622;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Referencia visual · ArchiMate 3.2</div>
+  <h1>Manual de Convenciones ArchiMate</h1>
+  <p>Cada símbolo del estándar, agrupado por capa como en el modelo de The Open Group: qué representa y un ejemplo aplicado a un banco, tomado de tu propia hoja de referencia.</p>
+
+  <nav class="stack" id="stack" aria-label="Capas de ArchiMate"></nav>
+</header>
+
+<div class="toolbar">
+  <input id="search" type="text" placeholder="Buscar símbolo, definición o ejemplo…" aria-label="Buscar">
+  <span id="count"></span>
+</div>
+
+<main id="main"></main>
+
+<footer>Basado en la especificación ArchiMate 3.2 de The Open Group y tarjetas de referencia con ejemplos propios (BNCR).</footer>
+
+<script>
+const NAVY = "#16232F";
+
+// ---------- Glyph library (dark line-art, transparent bg) ----------
+function g(inner){ return `<svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`; }
+const S = 4; // stroke width
+const GLYPHS = {
+  person: g(`<circle cx="48" cy="28" r="12" stroke="${NAVY}" stroke-width="${S}"/><path d="M26 78c2-18 12-26 22-26s20 8 22 26" stroke="${NAVY}" stroke-width="${S}" stroke-linecap="round"/>`),
+  wheel: g(`<circle cx="48" cy="48" r="22" stroke="${NAVY}" stroke-width="${S}"/><circle cx="48" cy="48" r="6" fill="${NAVY}"/>${[0,60,120,180,240,300].map(a=>`<line x1="48" y1="48" x2="${48+22*Math.cos(a*Math.PI/180)}" y2="${48+22*Math.sin(a*Math.PI/180)}" stroke="${NAVY}" stroke-width="${S-1}"/>`).join('')}`),
+  magnifier: g(`<circle cx="42" cy="40" r="18" stroke="${NAVY}" stroke-width="${S}"/><line x1="55" y1="53" x2="74" y2="72" stroke="${NAVY}" stroke-width="${S}" stroke-linecap="round"/>`),
+  targetring: g(`<circle cx="48" cy="48" r="24" stroke="${NAVY}" stroke-width="${S}"/><circle cx="48" cy="48" r="12" stroke="${NAVY}" stroke-width="${S}"/><circle cx="48" cy="48" r="3" fill="${NAVY}"/>`),
+  targetarrow: g(`<circle cx="44" cy="52" r="18" stroke="${NAVY}" stroke-width="${S}"/><circle cx="44" cy="52" r="7" fill="${NAVY}"/><path d="M60 18 L74 32 M74 32 L62 34 M74 32 L72 44 M74 32 L52 44" stroke="${NAVY}" stroke-width="${S}" stroke-linecap="round" stroke-linejoin="round"/>`),
+  exclaim: g(`<rect x="18" y="18" width="60" height="60" rx="8" stroke="${NAVY}" stroke-width="${S}"/><line x1="48" y1="30" x2="48" y2="56" stroke="${NAVY}" stroke-width="${S+1}" stroke-linecap="round"/><circle cx="48" cy="68" r="3.5" fill="${NAVY}"/>`),
+  parallelogram: g(`<path d="M28 74 L18 30 H68 L78 74 Z" stroke="${NAVY}" stroke-width="${S}" stroke-linejoin="round"/>`),
+  parallelogramh: g(`<path d="M28 74 L18 30 H68 L78 74 Z" stroke="${NAVY}" stroke-width="${S}" stroke-linejoin="round"/><line x1="28" y1="66" x2="42" y2="38" stroke="${NAVY}" stroke-width="2"/><line x1="42" y1="66" x2="56" y2="38" stroke="${NAVY}" stroke-width="2"/><line x1="56" y1="66" x2="70" y2="38" stroke="${NAVY}" stroke-width="2"/>`),
+  cloud: g(`<path d="M28 62c-9 0-14-6-14-13 0-6 5-12 12-12 1-9 9-15 18-15 8 0 15 5 17 12 8 0 14 6 14 13s-6 15-14 15H28Z" stroke="${NAVY}" stroke-width="${S}" stroke-linejoin="round"/>`),
+  oval: g(`<ellipse cx="48" cy="48" rx="30" ry="18" stroke="${NAVY}" stroke-width="${S}"/>`),
+  resource: g(`<rect x="20" y="52" width="12" height="24" stroke="${NAVY}" stroke-width="${S}"/><rect x="42" y="38" width="12" height="38" stroke="${NAVY}" stroke-width="${S}"/><rect x="64" y="22" width="12" height="54" stroke="${NAVY}" stroke-width="${S}"/>`),
+  capability: g(`<rect x="20" y="20" width="24" height="24" stroke="${NAVY}" stroke-width="${S}"/><rect x="52" y="20" width="24" height="24" stroke="${NAVY}" stroke-width="${S}"/><rect x="20" y="52" width="24" height="24" stroke="${NAVY}" stroke-width="${S}"/><rect x="52" y="52" width="24" height="24" stroke="${NAVY}" stroke-width="${S}"/>`),
+  chevronflag: g(`<path d="M18 26 H60 L78 48 L60 70 H18 Z" stroke="${NAVY}" stroke-width="${S}" stroke-linejoin="round"/>`),
+  arrowtarget: g(`<circle cx="34" cy="62" r="14" stroke="${NAVY}" stroke-width="${S}"/><circle cx="34" cy="62" r="4" fill="${NAVY}"/><path d="M46 50 L76 20 M76 20 L60 22 M76 20 L74 36" stroke="${NAVY}" stroke-width="${S}" stroke-linecap="round" stroke-linejoin="round"/>`),
+  cylinder: g(`<ellipse cx="48" cy="26" rx="26" ry="10" stroke="${NAVY}" stroke-width="${S}"/><path d="M22 26 V62 a26 10 0 0 0 52 0 V26" stroke="${NAVY}" stroke-width="${S}"/>`),
+  twocircle: g(`<circle cx="38" cy="48" r="20" stroke="${NAVY}" stroke-width="${S}"/><circle cx="58" cy="48" r="20" stroke="${NAVY}" stroke-width="${S}"/>`),
+  lollipop: g(`<circle cx="48" cy="36" r="12" stroke="${NAVY}" stroke-width="${S}"/><line x1="48" y1="48" x2="48" y2="74" stroke="${NAVY}" stroke-width="${S}"/>`),
+  arrowchevron: g(`<path d="M18 30 H56 L78 48 L56 66 H18 L40 48 Z" stroke="${NAVY}" stroke-width="${S}" stroke-linejoin="round"/>`),
+  chevronup: g(`<path d="M30 78 V40 L48 20 L66 40 V78 Z" stroke="${NAVY}" stroke-width="${S}" stroke-linejoin="round"/>`),
+  splitcircle: g(`<circle cx="48" cy="48" r="26" stroke="${NAVY}" stroke-width="${S}"/><path d="M48 22 A26 26 0 0 1 48 74 Z" fill="${NAVY}" opacity="0.55"/>`),
+  flag: g(`<path d="M20 22 H62 L78 48 L62 74 H20 Z" stroke="${NAVY}" stroke-width="${S}" stroke-linejoin="round"/>`),
+  rect: g(`<rect x="18" y="30" width="60" height="36" stroke="${NAVY}" stroke-width="${S}"/>`),
+  rectsection: g(`<rect x="18" y="24" width="60" height="48" stroke="${NAVY}" stroke-width="${S}"/><line x1="18" y1="38" x2="78" y2="38" stroke="${NAVY}" stroke-width="${S-1}"/><line x1="28" y1="52" x2="68" y2="52" stroke="${NAVY}" stroke-width="2"/><line x1="28" y1="60" x2="68" y2="60" stroke="${NAVY}" stroke-width="2"/>`),
+  wavyrect: g(`<path d="M18 26 H78 V58 Q68 66 58 58 Q48 66 38 58 Q28 66 18 58 Z" stroke="${NAVY}" stroke-width="${S}" stroke-linejoin="round"/>`),
+  tabrect: g(`<rect x="18" y="16" width="26" height="12" stroke="${NAVY}" stroke-width="${S-1}"/><rect x="18" y="28" width="60" height="40" stroke="${NAVY}" stroke-width="${S}"/>`),
+  component: g(`<rect x="30" y="22" width="46" height="52" stroke="${NAVY}" stroke-width="${S}"/><rect x="16" y="30" width="18" height="10" stroke="${NAVY}" stroke-width="${S-1}"/><rect x="16" y="56" width="18" height="10" stroke="${NAVY}" stroke-width="${S-1}"/>`),
+  cube: g(`<path d="M48 14 L80 30 V64 L48 82 L16 64 V30 Z" stroke="${NAVY}" stroke-width="${S}" stroke-linejoin="round"/><path d="M16 30 L48 46 L80 30 M48 46 V82" stroke="${NAVY}" stroke-width="${S-1}"/>`),
+  device: g(`<path d="M40 20 L66 32 V56 L40 68 L14 56 V32 Z" stroke="${NAVY}" stroke-width="${S}" stroke-linejoin="round"/><rect x="46" y="52" width="30" height="20" stroke="${NAVY}" stroke-width="${S-1}"/>`),
+  syssoftware: g(`<path d="M40 26 L66 38 V60 L40 72 L14 60 V38 Z" stroke="${NAVY}" stroke-width="${S}" stroke-linejoin="round"/><circle cx="66" cy="26" r="9" stroke="${NAVY}" stroke-width="${S-1}"/>`),
+  pathlink: g(`<circle cx="20" cy="48" r="9" stroke="${NAVY}" stroke-width="${S-1}"/><circle cx="76" cy="48" r="9" stroke="${NAVY}" stroke-width="${S-1}"/><line x1="29" y1="48" x2="67" y2="48" stroke="${NAVY}" stroke-width="${S}" stroke-dasharray="2 7" stroke-linecap="round"/>`),
+  network: g(`<circle cx="24" cy="30" r="8" stroke="${NAVY}" stroke-width="${S-1}"/><circle cx="72" cy="30" r="8" stroke="${NAVY}" stroke-width="${S-1}"/><circle cx="48" cy="72" r="8" stroke="${NAVY}" stroke-width="${S-1}"/><line x1="30" y1="34" x2="66" y2="34" stroke="${NAVY}" stroke-width="${S-1}"/><line x1="28" y1="37" x2="45" y2="65" stroke="${NAVY}" stroke-width="${S-1}"/><line x1="68" y1="37" x2="51" y2="65" stroke="${NAVY}" stroke-width="${S-1}"/>`),
+  artifact: g(`<path d="M24 14 H58 L72 28 V82 H24 Z" stroke="${NAVY}" stroke-width="${S}" stroke-linejoin="round"/><path d="M58 14 V28 H72" stroke="${NAVY}" stroke-width="${S-1}" stroke-linejoin="round"/>`),
+  gear: g(`<circle cx="48" cy="48" r="14" stroke="${NAVY}" stroke-width="${S}"/>${[0,45,90,135,180,225,270,315].map(a=>`<line x1="${48+16*Math.cos(a*Math.PI/180)}" y1="${48+16*Math.sin(a*Math.PI/180)}" x2="${48+27*Math.cos(a*Math.PI/180)}" y2="${48+27*Math.sin(a*Math.PI/180)}" stroke="${NAVY}" stroke-width="${S+1}" stroke-linecap="round"/>`).join('')}`),
+  building: g(`<path d="M16 78 V44 L48 20 L80 44 V78 Z" stroke="${NAVY}" stroke-width="${S}" stroke-linejoin="round"/><line x1="48" y1="20" x2="48" y2="8" stroke="${NAVY}" stroke-width="${S-1}"/><rect x="38" y="58" width="20" height="20" stroke="${NAVY}" stroke-width="${S-1}"/>`),
+  hexagon: g(`<path d="M32 18 H64 L80 48 L64 78 H32 L16 48 Z" stroke="${NAVY}" stroke-width="${S}" stroke-linejoin="round"/>`),
+  plateau: g(`<path d="M48 12 L80 28 V60 L48 76 L16 60 V28 Z" stroke="${NAVY}" stroke-width="${S}" stroke-linejoin="round"/><line x1="24" y1="40" x2="72" y2="40" stroke="${NAVY}" stroke-width="2"/><line x1="24" y1="50" x2="72" y2="50" stroke="${NAVY}" stroke-width="2"/>`),
+  gap: g(`<circle cx="48" cy="48" r="26" stroke="${NAVY}" stroke-width="${S}"/><line x1="30" y1="66" x2="66" y2="30" stroke="${NAVY}" stroke-width="${S}" stroke-linecap="round"/>`),
+  dashedbox: g(`<rect x="16" y="24" width="64" height="48" rx="2" stroke="${NAVY}" stroke-width="${S-1}" stroke-dasharray="6 5"/>`),
+  pin: g(`<path d="M48 80 C48 80 24 54 24 36 a24 24 0 0 1 48 0 c0 18-24 44-24 44Z" stroke="${NAVY}" stroke-width="${S}" stroke-linejoin="round"/><circle cx="48" cy="36" r="8" stroke="${NAVY}" stroke-width="${S-1}"/>`),
+};
+
+// ---------- Relationship / connector diagrams ----------
+function rel({dash, start, end, label}){
+  const dashAttr = dash ? `stroke-dasharray="${dash}"` : '';
+  let startMark='', endMark='';
+  const lx1=22, lx2=74, ly=48;
+  if(start==='diamond-filled') startMark = `<path d="M${lx1} ${ly} L${lx1+12} ${ly-8} L${lx1+24} ${ly} L${lx1+12} ${ly+8} Z" fill="${NAVY}"/>`;
+  if(start==='diamond-hollow') startMark = `<path d="M${lx1} ${ly} L${lx1+12} ${ly-8} L${lx1+24} ${ly} L${lx1+12} ${ly+8} Z" fill="white" stroke="${NAVY}" stroke-width="3"/>`;
+  if(start==='circle-filled') startMark = `<circle cx="${lx1+8}" cy="${ly}" r="7" fill="${NAVY}"/>`;
+  if(end==='arrow-hollow-tri') endMark = `<path d="M${lx2} ${ly} L${lx2-16} ${ly-9} L${lx2-16} ${ly+9} Z" fill="white" stroke="${NAVY}" stroke-width="3"/>`;
+  if(end==='arrow-open') endMark = `<path d="M${lx2-14} ${ly-9} L${lx2} ${ly} L${lx2-14} ${ly+9}" stroke="${NAVY}" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+  if(end==='arrow-small-open') endMark = `<path d="M${lx2-10} ${ly-6} L${lx2} ${ly} L${lx2-10} ${ly+6}" stroke="${NAVY}" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+  if(end==='arrow-solid') endMark = `<path d="M${lx2} ${ly} L${lx2-16} ${ly-8} L${lx2-16} ${ly+8} Z" fill="${NAVY}"/>`;
+  if(end==='diamond-small-filled') endMark = `<path d="M${lx2} ${ly} L${lx2-10} ${ly-7} L${lx2-20} ${ly} L${lx2-10} ${ly+7} Z" fill="${NAVY}"/>`;
+  return g(`<rect x="10" y="40" width="16" height="16" rx="2" stroke="${NAVY}" stroke-width="3"/><rect x="70" y="40" width="16" height="16" rx="2" stroke="${NAVY}" stroke-width="3"/><line x1="${lx1}" y1="${ly}" x2="${lx2}" y2="${ly}" stroke="${NAVY}" stroke-width="3" ${dashAttr}/>${startMark}${endMark}`);
+}
+function junction(filled){
+  return g(`<line x1="48" y1="10" x2="48" y2="42" stroke="${NAVY}" stroke-width="3"/><line x1="14" y1="80" x2="42" y2="52" stroke="${NAVY}" stroke-width="3"/><line x1="82" y1="80" x2="54" y2="52" stroke="${NAVY}" stroke-width="3"/><circle cx="48" cy="47" r="10" fill="${filled?NAVY:'white'}" stroke="${NAVY}" stroke-width="3"/>`);
+}
+
+// ---------- Data ----------
+const DATA = [
+{id:'motivacion', title:'Motivación', color:'var(--motivacion)', items:[
+  {n:'Interesado', icon:'cylinder', def:'El rol de un individuo, equipo u organización (o clases de ellos) que representa sus intereses en los efectos de la arquitectura.', ej:'El gerente de canales digitales del BNCR busca mejorar la experiencia de los usuarios en BN Móvil.'},
+  {n:'Motivador (Conductor)', icon:'wheel', def:'Condición externa o interna que motiva a una organización a definir sus metas e implementar los cambios necesarios.', ej:'La creciente demanda de servicios móviles motiva mejoras en la app BN Móvil.'},
+  {n:'Evaluación', icon:'magnifier', def:'Resultado de un análisis de estado de relaciones de la empresa con respecto a algún motivador.', ej:'El análisis de atención en ventanilla muestra tiempos de espera excesivos.'},
+  {n:'Meta', icon:'targetring', def:'Declaración de intención de alto nivel, o estado final deseado para una organización y sus interesados.', ej:'Reducir los tiempos de atención presencial en un 30%.'},
+  {n:'Resultado', icon:'targetarrow', def:'Representa un resultado final, concreto y verificable.', ej:'Disminución comprobada de los tiempos de espera en sucursales.'},
+  {n:'Principio', icon:'exclaim', def:'Declaración de intención que define una propiedad que aplica a cualquier sistema en un cierto contexto de la arquitectura.', ej:'Proteger siempre la confidencialidad de los datos de los clientes.'},
+  {n:'Requerimiento', icon:'parallelogram', def:'Declaración de necesidad que define una propiedad que aplica a un sistema específico descrito por la arquitectura.', ej:'El sistema de autenticación debe permitir validación biométrica.'},
+  {n:'Restricción', icon:'parallelogramh', def:'Factor que limita la realización de metas.', ej:'El presupuesto anual limita la modernización de cajeros automáticos.'},
+  {n:'Significado', icon:'cloud', def:'Conocimiento o interpretación dada a un concepto en un contexto particular.', ej:'El ícono de candado en BN Móvil significa que la conexión es segura.'},
+  {n:'Valor', icon:'oval', def:'Valor relativo, beneficio, utilidad o importancia de un concepto.', ej:'Para el BNCR, la seguridad de las transacciones es un valor prioritario.'},
+]},
+{id:'estrategia', title:'Estrategia', color:'var(--estrategia)', items:[
+  {n:'Recurso', icon:'resource', def:'Activo propiedad de, o controlado por, un individuo u organización.', ej:'La infraestructura de servidores y almacenamiento en la nube de Azure contratada por el BNCR.'},
+  {n:'Capacidad', icon:'capability', def:'Habilidad que posee un elemento de estructura activo, como una organización, persona o sistema.', ej:'El BNCR tiene la capacidad de brindar atención al cliente 24/7 a través de sus canales digitales.'},
+  {n:'Flujo de valor', icon:'chevronflag', def:'Secuencia de actividades que crean un resultado general para un cliente, interesado o usuario final.', ej:'El proceso desde que un cliente solicita una tarjeta hasta que la recibe en su domicilio.'},
+  {n:'Curso de acción', icon:'arrowtarget', def:'Propuesta o plan para configurar capacidades y recursos de la empresa, comprometidos para alcanzar una meta.', ej:'Implementar un sistema automatizado de apertura de cuentas en línea.'},
+]},
+{id:'negocio', title:'Negocio', color:'var(--negocio)', items:[
+  {n:'Actor de negocio', icon:'person', def:'Entidad de negocio capaz de realizar un comportamiento.', ej:'Un asesor de créditos en una sucursal del BNCR.'},
+  {n:'Rol de negocio', icon:'cylinder', def:'Responsabilidad de realizar un comportamiento específico, asignada a un actor o que este desempeña en un evento.', ej:'Rol de Ejecutivo de Cuentas en la atención a clientes empresariales.'},
+  {n:'Colaboración de negocio', icon:'twocircle', def:'Agregación de dos o más elementos activos de negocio que trabajan juntos para un comportamiento colectivo.', ej:'Las áreas de riesgos y legal colaboran para aprobar un crédito hipotecario.'},
+  {n:'Interfaz de negocio', icon:'lollipop', def:'Punto de acceso donde un servicio de negocio se hace disponible al entorno.', ej:'El portal empresarial del BNCR para gestión de cuentas y pagos.'},
+  {n:'Proceso de negocio', icon:'arrowchevron', def:'Secuencia de comportamientos de negocio que logra un resultado específico.', ej:'El proceso de solicitud y aprobación de un crédito personal.'},
+  {n:'Función de negocio', icon:'chevronup', def:'Colección de comportamientos de negocio basada en criterios seleccionados, como recursos o competencias.', ej:'Función de evaluación crediticia de clientes.'},
+  {n:'Interacción de negocio', icon:'splitcircle', def:'Unidad de comportamiento colectivo realizada por la colaboración de actores, roles o colaboraciones.', ej:'La coordinación entre el área de ventas y operaciones para formalizar un préstamo.'},
+  {n:'Evento de negocio', icon:'flag', def:'Cambio de estado organizacional.', ej:'Recepción de una solicitud formal de apertura de cuenta.'},
+  {n:'Servicio de negocio', icon:'oval', def:'Comportamiento definido explícitamente, expuesto al entorno por un rol, actor o colaboración.', ej:'Servicio de consulta de saldo en cajeros automáticos.'},
+  {n:'Objeto de negocio', icon:'rect', def:'Concepto usado dentro de un dominio de negocio particular.', ej:'Contrato de apertura de cuenta de ahorro.'},
+  {n:'Contrato', icon:'rectsection', def:'Acuerdo formal o informal entre proveedor y consumidor.', ej:'Acuerdo de términos de uso de BN Móvil.'},
+  {n:'Representación', icon:'wavyrect', def:'Forma perceptible de la información de un objeto de negocio.', ej:'Estado de cuenta emitido en formato PDF.'},
+  {n:'Producto', icon:'tabrect', def:'Colección de servicios y/o elementos pasivos con un contrato, ofrecida como un todo.', ej:'El plan "Cuenta Mujer" que incluye beneficios especiales y servicios exclusivos.'},
+]},
+{id:'aplicacion', title:'Aplicación', color:'var(--aplicacion)', items:[
+  {n:'Componente de aplicación', icon:'component', def:'Encapsulamiento de funcionalidad de aplicación alineada a estructura de implementación, modular y reemplazable.', ej:'El módulo de autenticación en la app BN Móvil.'},
+  {n:'Colaboración de aplicaciones', icon:'twocircle', def:'Agregación de dos o más elementos activos que trabajan juntos para comportamientos colectivos.', ej:'Integración entre el sistema de pagos y el sistema contable del BNCR.'},
+  {n:'Interfaz de aplicación', icon:'lollipop', def:'Punto de acceso donde los servicios de aplicación están disponibles a un usuario, componente o nodo.', ej:'API de consulta de saldo utilizada por BN Móvil.'},
+  {n:'Función de aplicación', icon:'chevronup', def:'Comportamiento automatizado que puede ser realizado por un componente de aplicación.', ej:'Validar las credenciales de un cliente que ingresa a BN Móvil.'},
+  {n:'Interacción de aplicaciones', icon:'splitcircle', def:'Comportamiento colectivo de aplicación realizado por dos o más componentes.', ej:'BN Internet Banking interactúa con el sistema de transferencias SINPE.'},
+  {n:'Proceso de aplicación', icon:'arrowchevron', def:'Secuencia de comportamientos de aplicación que logra un resultado específico.', ej:'Generación automática de reportes regulatorios.'},
+  {n:'Evento de aplicación', icon:'flag', def:'Cambio de estado de aplicación.', ej:'Notificación de intento fallido de inicio de sesión.'},
+  {n:'Servicio de aplicación', icon:'oval', def:'Comportamiento de aplicación expuesto y definido explícitamente.', ej:'Servicio de consulta de movimientos bancarios.'},
+  {n:'Objeto de datos', icon:'rect', def:'Datos estructurados para procesamiento automatizado.', ej:'Datos de identificación y transacciones del cliente.'},
+]},
+{id:'tecnologia', title:'Tecnología', color:'var(--tecnologia)', items:[
+  {n:'Nodo', icon:'cube', def:'Recurso computacional o físico que aloja, manipula o interactúa con otros recursos.', ej:'Servidor físico en el centro de datos del BNCR.'},
+  {n:'Dispositivo', icon:'device', def:'Recurso físico de TI donde se almacenan o ejecutan software y artefactos.', ej:'Router principal de la red interna del banco.'},
+  {n:'Software del sistema', icon:'syssoftware', def:'Software que proporciona o contribuye a un entorno para ejecutar y utilizar otros programas o datos.', ej:'Sistema operativo Linux o Windows de los servidores bancarios.'},
+  {n:'Colaboración de tecnología', icon:'twocircle', def:'Agregado de elementos de tecnología que trabajan juntos para un comportamiento colectivo.', ej:'Clúster de servidores que soporta el core bancario.'},
+  {n:'Interfaz de tecnología', icon:'lollipop', def:'Punto de acceso a servicios de tecnología ofrecidos por un nodo.', ej:'Puerto de red para conexión de cajeros automáticos.'},
+  {n:'Camino', icon:'pathlink', def:'Enlace entre nodos que permite el intercambio de datos, energía o material.', ej:'Enlace de fibra óptica entre sucursales y el centro de datos.'},
+  {n:'Red de comunicación', icon:'network', def:'Estructuras que conectan nodos para transmitir, enrutar y recibir datos.', ej:'Red WAN del BNCR que interconecta todas las sucursales.'},
+  {n:'Función de tecnología', icon:'chevronup', def:'Conjunto de comportamientos tecnológicos que puede realizar un nodo.', ej:'Procesar transacciones financieras en tiempo real.'},
+  {n:'Proceso de tecnología', icon:'arrowchevron', def:'Secuencia de comportamientos tecnológicos que logra un resultado específico.', ej:'Proceso de respaldo automático de bases de datos.'},
+  {n:'Interacción de tecnología', icon:'splitcircle', def:'Comportamiento colectivo de tecnología realizado por dos o más nodos.', ej:'Comunicación entre servidor de aplicaciones y base de datos.'},
+  {n:'Evento de tecnología', icon:'flag', def:'Cambio de estado tecnológico.', ej:'Falla en un servidor que dispara protocolos de contingencia.'},
+  {n:'Servicio de tecnología', icon:'oval', def:'Comportamiento de tecnología expuesto y definido explícitamente.', ej:'Servicio de hosting de la plataforma BN Móvil.'},
+  {n:'Artefacto', icon:'artifact', def:'Pieza de datos usada o producida en un proceso de desarrollo o despliegue de TI.', ej:'Script SQL para creación de tablas en bases de datos.'},
+]},
+{id:'fisica', title:'Física', color:'var(--fisica)', items:[
+  {n:'Equipo', icon:'gear', def:'Máquinas, herramientas o instrumentos que pueden crear, usar, almacenar o transformar materiales.', ej:'Contadora automática de billetes en ventanilla.'},
+  {n:'Instalaciones', icon:'building', def:'Estructura o entorno físico.', ej:'Edificio central del BNCR en San José.'},
+  {n:'Red de distribución', icon:'network', def:'Red física utilizada para transportar materiales o energía.', ej:'Red eléctrica de respaldo del centro de datos.'},
+  {n:'Material', icon:'hexagon', def:'Materia física tangible o energía.', ej:'Rollos de papel para impresión de comprobantes.'},
+]},
+{id:'implementacion', title:'Implementación y Migración', color:'var(--implementacion)', items:[
+  {n:'Paquete de trabajo', icon:'arrowchevron', def:'Serie de acciones diseñadas para lograr resultados específicos dentro de límites de tiempo y recursos.', ej:'Proyecto de implementación de un nuevo sistema de pagos.'},
+  {n:'Entregable', icon:'wavyrect', def:'Resultado de un paquete de trabajo, definido con precisión.', ej:'Sistema de transferencias habilitado en producción.'},
+  {n:'Evento de implementación', icon:'flag', def:'Cambio de estado relacionado con la implementación o migración.', ej:'Inicio de migración de datos al nuevo core bancario.'},
+  {n:'Meseta', icon:'plateau', def:'Estado relativamente estable de la arquitectura que existe durante un período de tiempo limitado.', ej:'Estado actual del core bancario antes de su actualización.'},
+  {n:'Brecha', icon:'gap', def:'Declaración de diferencia entre dos mesetas.', ej:'Falta de capacidad en el sistema actual para soportar nuevos productos digitales.'},
+]},
+{id:'compuesto', title:'Elementos Compuestos', color:'var(--compuesto)', items:[
+  {n:'Elemento de agrupación', icon:'dashedbox', def:'Agrega o compone conceptos que pertenecen a un mismo conjunto, basado en una característica común.', ej:'Agrupación de todos los servicios digitales en una oferta única.'},
+  {n:'Localización', icon:'pin', def:'Lugar o posición física o conceptual donde se localizan elementos o se realizan procesos.', ej:'Centro de datos principal ubicado en Santo Domingo de Heredia.'},
+]},
+{id:'relaciones', title:'Relaciones Estructurales y de Dependencia', color:'var(--relacion)', items:[
+  {n:'Composición', rel:{start:'diamond-filled'}, def:'El elemento consiste de uno o más elementos que forman parte de un todo y no pueden funcionar de forma independiente.', ej:'El sistema de cuentas del BNCR está compuesto por módulos de apertura, consulta y cierre que dependen del sistema principal.'},
+  {n:'Agregación', rel:{start:'diamond-hollow'}, def:'El elemento combina uno o más conceptos que sí pueden funcionar de forma independiente.', ej:'La cartera de productos del BNCR combina cuentas corrientes, de ahorro y tarjetas de crédito, que funcionan por separado.'},
+  {n:'Asignación', rel:{start:'circle-filled'}, def:'Expresa la asignación de responsabilidad, ejecución de un comportamiento, almacenamiento o procesamiento a un elemento.', ej:'Un asesor de crédito del BNCR está asignado al proceso de aprobación de préstamos.'},
+  {n:'Realización', rel:{dash:'2 6', end:'arrow-hollow-tri'}, def:'Una entidad juega un rol clave en la creación, logro, soporte u operación de una entidad más abstracta.', ej:'La aplicación BN Móvil realiza el servicio de consulta de saldos para los clientes.'},
+  {n:'Servicio (Serving)', rel:{end:'arrow-open'}, def:'Un elemento provee su funcionalidad a otro elemento.', ej:'El servicio de validación de firma digital del BNCR provee funcionalidad al sistema de aprobación de créditos.'},
+  {n:'Acceso', rel:{dash:'1 5', end:'arrow-small-open'}, def:'Habilidad de elementos activos y de comportamiento de observar o actuar sobre elementos pasivos de estructura.', ej:'La app BN Móvil accede a los datos de cuentas de los clientes para mostrar saldos y movimientos.'},
+  {n:'Influencia', rel:{dash:'6 4', end:'arrow-small-open'}, def:'Un elemento afecta la implementación o logro de algún elemento de motivación.', ej:'Una política interna del BNCR influye en la estrategia de transformación digital.'},
+  {n:'Asociación', rel:{}, def:'Relación no especificada, o una que no está representada por otra relación de ArchiMate.', ej:'Un cliente está asociado a múltiples productos como cuentas y préstamos.'},
+]},
+{id:'comportamiento', title:'Relaciones de Comportamiento y Especialización', color:'var(--relacion)', items:[
+  {n:'Desencadenante (Triggering)', rel:{end:'arrow-solid'}, def:'Relación temporal o causal entre elementos.', ej:'La recepción de una solicitud de préstamo desencadena la evaluación crediticia.'},
+  {n:'Flujo', rel:{dash:'2 6', end:'diamond-small-filled'}, def:'Transferencia (de información, bienes o dinero) de un elemento a otro.', ej:'Los datos de una solicitud ingresada en ventanilla fluyen hacia el sistema central para su procesamiento.'},
+  {n:'Especialización', rel:{end:'arrow-hollow-tri'}, def:'Un elemento es una clase particular de otro elemento.', ej:'La cuenta electrónica del BNCR es una especialización de la cuenta de ahorro tradicional.'},
+]},
+{id:'conectores', title:'Conectores', color:'var(--relacion)', items:[
+  {n:'Unión (AND)', junction:true, def:'Une varias relaciones del mismo tipo; todas deben cumplirse para continuar.', ej:'Para aprobar un crédito se requiere cumplir con el análisis de riesgo y la validación de ingresos.'},
+  {n:'Junción (OR)', junction:false, def:'Une varias relaciones del mismo tipo, pero solo una debe cumplirse para continuar.', ej:'Un cliente puede identificarse con cédula o pasaporte para realizar una transacción.'},
+]},
+];
+
+// ---------- Render ----------
+const stack = document.getElementById('stack');
+const main = document.getElementById('main');
+
+DATA.forEach(cat=>{
+  const btn = document.createElement('button');
+  btn.textContent = cat.title;
+  btn.style.background = cat.color;
+  btn.dataset.target = cat.id;
+  btn.addEventListener('click', ()=>{
+    document.getElementById('cat-'+cat.id).scrollIntoView({behavior:'smooth', block:'start'});
+  });
+  stack.appendChild(btn);
+
+  const section = document.createElement('section');
+  section.className = 'category';
+  section.id = 'cat-'+cat.id;
+  section.innerHTML = `<h2><span class="swatch" style="background:${cat.color}"></span>${cat.title}</h2>
+    <p class="sub">${cat.items.length} elemento${cat.items.length===1?'':'s'}</p>
+    <div class="grid"></div>`;
+  const grid = section.querySelector('.grid');
+
+  cat.items.forEach(item=>{
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.search = (item.n + ' ' + item.def + ' ' + item.ej).toLowerCase();
+    let iconSvg;
+    if(item.junction!==undefined) iconSvg = junction(item.junction);
+    else if(item.rel) iconSvg = rel(item.rel);
+    else iconSvg = GLYPHS[item.icon] || GLYPHS.rect;
+    card.innerHTML = `
+      <div class="card-head">
+        <div class="badge" style="background:${cat.color}">${iconSvg}</div>
+        <h3>${item.n}</h3>
+      </div>
+      <p>${item.def}</p>
+      <div class="example"><b>Ejemplo · BNCR</b>${item.ej}</div>
+    `;
+    grid.appendChild(card);
+  });
+
+  main.appendChild(section);
+});
+
+// search filter
+const searchInput = document.getElementById('search');
+const countEl = document.getElementById('count');
+const allCards = Array.from(document.querySelectorAll('.card'));
+const allSections = Array.from(document.querySelectorAll('.category'));
+function updateCount(){
+  const visible = allCards.filter(c=>!c.classList.contains('hidden')).length;
+  countEl.textContent = `${visible} / ${allCards.length} símbolos`;
+}
+searchInput.addEventListener('input', ()=>{
+  const q = searchInput.value.trim().toLowerCase();
+  allCards.forEach(c=>{
+    c.classList.toggle('hidden', q && !c.dataset.search.includes(q));
+  });
+  allSections.forEach(sec=>{
+    const anyVisible = Array.from(sec.querySelectorAll('.card')).some(c=>!c.classList.contains('hidden'));
+    sec.classList.toggle('hidden', !anyVisible);
+  });
+  updateCount();
+});
+updateCount();
+</script>
+</body>
+</html>
