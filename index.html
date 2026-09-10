@@ -269,6 +269,21 @@
   }
   .jumpitem:hover, .jumpitem.hl{background:var(--panel2);}
   .jumpempty{padding:16px; text-align:center; color:var(--text-dim); font-size:13px;}
+
+  .edit-toolbar{
+    position:fixed; bottom:24px; right:24px; z-index:200;
+    display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;
+  }
+  .edit-toolbar button{
+    font-family:'IBM Plex Sans',sans-serif; font-size:13.5px; font-weight:600;
+    padding:12px 18px; border-radius:999px; border:1px solid var(--border); cursor:pointer;
+    box-shadow:0 8px 24px rgba(0,0,0,0.4);
+  }
+  #editModeBtn{background:var(--accent); color:#0B1622; border:none;}
+  #downloadBtn{background:var(--panel); color:var(--text); display:none;}
+  .example-text[contenteditable="true"]{
+    outline:2px dashed var(--accent); outline-offset:3px; border-radius:4px; cursor:text;
+  }
 </style>
 </head>
 <body>
@@ -918,7 +933,7 @@ DATA.forEach(cat=>{
         <h3>${item.n}</h3>
       </div>
       <p>${item.def}</p>
-      <div class="example"><b>Ejemplo · BNCR</b>${item.ej}</div>
+      <div class="example"><b>Ejemplo</b><span class="example-text">${item.ej}</span></div>
     `;
     grid.appendChild(card);
   });
@@ -1050,6 +1065,39 @@ document.addEventListener('click', (e) => {
   }
 });
 
+// ---------- Edit mode for examples ----------
+let editMode = false;
+function toggleEditMode(){
+  editMode = !editMode;
+  document.querySelectorAll('.example-text').forEach(el => {
+    el.contentEditable = editMode;
+  });
+  document.getElementById('editModeBtn').textContent = editMode ? '✕ Salir de edición' : '✏️ Editar ejemplos';
+  document.getElementById('downloadBtn').style.display = editMode ? 'inline-block' : 'none';
+}
+
+function downloadEditedHTML(){
+  const clone = document.documentElement.cloneNode(true);
+  clone.querySelectorAll('.example-text').forEach(el => el.removeAttribute('contenteditable'));
+  const toolbar = clone.querySelector('.edit-toolbar');
+  if(toolbar) toolbar.remove();
+  const htmlStr = '<!DOCTYPE html>\n' + clone.outerHTML;
+  const blob = new Blob([htmlStr], {type:'text/html'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'manual-archimate.html';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
 </script>
+<div class="edit-toolbar">
+  <button id="downloadBtn" onclick="downloadEditedHTML()">⬇ Descargar HTML actualizado</button>
+  <button id="editModeBtn" onclick="toggleEditMode()">✏️ Editar ejemplos</button>
+</div>
+
 </body>
 </html>
